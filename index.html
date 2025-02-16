@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Photo Gallery for Bhai & Bhabhi</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            background-color: #222;
+            color: #fff;
+        }
+        .gallery-container {
+            text-align: center;
+            padding: 20px;
+        }
+        h1 {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+        }
+        .gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 10px;
+            max-width: 100%;
+            margin: auto;
+            padding: 10px;
+        }
+        .gallery img {
+            width: 100%;
+            height: auto;
+            border-radius: 12px;
+            cursor: pointer;
+        }
+        .fullscreen-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+        .fullscreen-overlay img {
+            max-width: 90%;
+            max-height: 80%;
+            border-radius: 12px;
+            transition: transform 0.5s ease-in-out;
+            transform: scale(0.8);
+        }
+        .fullscreen-overlay img.show {
+            transform: scale(1);
+        }
+        .nav-arrow {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 2rem;
+            color: white;
+            cursor: pointer;
+            padding: 10px;
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 50%;
+            user-select: none;
+        }
+        .prev { left: 10px; }
+        .next { right: 10px; }
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 1.2rem;
+            }
+            .gallery {
+                grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            }
+            .nav-arrow {
+                font-size: 1.5rem;
+                padding: 5px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="gallery-container">
+        <h1>14, February - 2025</h1>
+        <div class="gallery" id="gallery"></div>
+    </div>
+    <div class="fullscreen-overlay" id="fullscreen-overlay">
+        <span class="nav-arrow prev" id="prev">&#10094;</span>
+        <img id="fullscreen-img" src="" alt="">
+        <span class="nav-arrow next" id="next">&#10095;</span>
+    </div>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const gallery = document.getElementById("gallery");
+            const overlay = document.getElementById("fullscreen-overlay");
+            const fullscreenImg = document.getElementById("fullscreen-img");
+            const prev = document.getElementById("prev");
+            const next = document.getElementById("next");
+            let currentIndex = 0;
+            let images = [];
+
+            for (let i = 1; i <= 57; i++) {
+                const img = document.createElement("img");
+                img.src = `${i}.jpg`;
+                img.loading = "lazy";
+                img.alt = `Photo ${i}`;
+                images.push(img.src);
+                img.dataset.index = i - 1;
+                img.addEventListener("click", function() {
+                    currentIndex = parseInt(img.dataset.index);
+                    showImage(currentIndex);
+                });
+                gallery.appendChild(img);
+            }
+            
+            function showImage(index) {
+                if (index >= 0 && index < images.length) {
+                    currentIndex = index;
+                    fullscreenImg.src = images[currentIndex];
+                    fullscreenImg.classList.remove("show");
+                    overlay.style.display = "flex";
+                    setTimeout(() => fullscreenImg.classList.add("show"), 100);
+                }
+            }
+            
+            prev.addEventListener("click", function(event) {
+                event.stopPropagation();
+                if (currentIndex > 0) showImage(currentIndex - 1);
+            });
+            
+            next.addEventListener("click", function(event) {
+                event.stopPropagation();
+                if (currentIndex < images.length - 1) showImage(currentIndex + 1);
+            });
+            
+            overlay.addEventListener("click", function() {
+                overlay.style.display = "none";
+            });
+        });
+    </script>
+</body>
+</html>
+
+
+
+
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Photo Gallery for Bhai & Bhabhi</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            background-color: #222;
+            color: #fff;
+        }
+        .gallery-container {
+            text-align: center;
+            padding: 20px;
+        }
+        h1 {
+            font-size: 2rem;
+            margin-bottom: 20px;
+        }
+        .gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            max-width: 1200px;
+            margin: auto;
+        }
+        .gallery img {
+            width: 100%;
+            height: auto;
+            border-radius: 12px;
+            transition: transform 0.4s ease, box-shadow 0.4s ease;
+            box-shadow: 0 4px 8px rgba(255, 255, 255, 0.2);
+            cursor: pointer;
+        }
+        .gallery img:hover {
+            transform: scale(1.1);
+            box-shadow: 0 8px 16px rgba(255, 255, 255, 0.4);
+        }
+        .fullscreen-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            justify-content: center;
+            align-items: center;
+        }
+        .fullscreen-overlay img {
+            max-width: 90%;
+            max-height: 90%;
+            border-radius: 12px;
+        }
+        .nav-arrow {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 2rem;
+            color: white;
+            cursor: pointer;
+            padding: 10px;
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 50%;
+            user-select: none;
+        }
+        .nav-arrow:hover {
+            background: rgba(0, 0, 0, 0.8);
+        }
+        .prev {
+            left: 20px;
+        }
+        .next {
+            right: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="gallery-container">
+        <h1>Photo Gallery for Bhai & Bhabhi</h1>
+        <div class="gallery" id="gallery"></div>
+    </div>
+    <div class="fullscreen-overlay" id="fullscreen-overlay">
+        <span class="nav-arrow prev" id="prev">&#10094;</span>
+        <img id="fullscreen-img" src="" alt="">
+        <span class="nav-arrow next" id="next">&#10095;</span>
+    </div>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const gallery = document.getElementById("gallery");
+            const imageCount = 50;
+            const overlay = document.getElementById("fullscreen-overlay");
+            const fullscreenImg = document.getElementById("fullscreen-img");
+            const prev = document.getElementById("prev");
+            const next = document.getElementById("next");
+            let currentIndex = 0;
+            let images = [];
+
+            for (let i = 1; i <= imageCount; i++) {
+                const div = document.createElement("div");
+                div.classList.add("gallery-item");
+                
+                const img = document.createElement("img");
+                img.src = `${i}.jpg`;
+                img.loading = "lazy";
+                img.alt = `Photo ${i}`;
+                images.push(img.src);
+                img.dataset.index = i - 1;
+                img.addEventListener("click", function() {
+                    currentIndex = parseInt(img.dataset.index);
+                    fullscreenImg.src = images[currentIndex];
+                    overlay.style.display = "flex";
+                });
+                
+                div.appendChild(img);
+                gallery.appendChild(div);
+            }
+            
+            function showImage(index) {
+                if (index >= 0 && index < images.length) {
+                    currentIndex = index;
+                    fullscreenImg.src = images[currentIndex];
+                }
+            }
+            
+            prev.addEventListener("click", function(event) {
+                event.stopPropagation();
+                showImage(currentIndex - 1);
+            });
+            
+            next.addEventListener("click", function(event) {
+                event.stopPropagation();
+                showImage(currentIndex + 1);
+            });
+            
+            overlay.addEventListener("click", function() {
+                overlay.style.display = "none";
+            });
+        });
+    </script>
+</body>
+</html> -->
